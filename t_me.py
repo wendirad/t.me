@@ -17,9 +17,7 @@ import asyncio
 import configparser
 import glob
 import logging
-import os
 import sys
-import threading
 import time
 
 from telethon.errors.rpcerrorlist import FileReferenceExpiredError
@@ -34,7 +32,6 @@ from telethon.tl.types import (InputMessagesFilterChatPhotos,
                                InputMessagesFilterRoundVoice,
                                InputMessagesFilterVideo,
                                InputMessagesFilterVoice)
-from telethon.utils import get_extension, is_image, resolve_bot_file_id
 
 logging.basicConfig(
     filename=".my_tg_export.log",
@@ -101,7 +98,7 @@ class TelegramMediaExport(TelegramClient):
         return f"mte_{media.id}"
 
     def _get_media_messages(self, messages):
-        media_messages = list()
+        media_messages = []
         for message in messages:
             if message.media is not None:
                 media_messages.append(message)
@@ -148,7 +145,6 @@ class TelegramMediaExport(TelegramClient):
             self.__new_download += 1
             logger.info("Export Complete! %s", path)
             await task
-        self.__download_complete = True
 
     async def export(self, channel_name):
         logger.info('Exporting channel "%s" start.', channel_name)
